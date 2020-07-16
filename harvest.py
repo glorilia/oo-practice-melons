@@ -96,7 +96,7 @@ class Melon(object):
         self.harvester_name = harvester_name
 
     def is_sellable(self):
-        return (self.shape_rating > 5 and self.color_rating > 5 
+        return (int(self.shape_rating) > 5 and int(self.color_rating) > 5 
                 and self.field != 3)
 
 
@@ -149,6 +149,36 @@ def get_sellability_report(melons):
         sellable = 'CAN BE SOLD' if melon.is_sellable() else 'NOT SELLABLE'
 
         print(f'Harvested by {harvester} from Field {field_num} ({sellable})')
+
+
+def get_report_from_log(log_path):
+    """Given a log detailing different melons, print a report."""
+
+    # Make the list of melon types
+    types_by_code = make_melon_type_lookup(make_melon_types())
+
+    # Open the log file from the given path
+    log_file = open(log_path)
+
+    # Create empty list where all melons will go
+    all_melons = []
+
+    # Traverse log file line by line
+    for line in log_file:
+        # Tokenize each line 
+        data_list = line.strip().split()
+
+        # Unpack data_list
+        _, shape, _, color, _, type_code, _, _, harvester, _, _, field = data_list
+
+        # Make instance of Melon class
+        melon = Melon(types_by_code[type_code], shape, color, field, harvester)
+
+        # Add melon to all_melons list
+        all_melons.append(melon)
+
+    # Print out sellability report
+    get_sellability_report(all_melons)
 
 
 
