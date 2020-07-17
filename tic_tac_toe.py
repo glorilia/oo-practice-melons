@@ -15,13 +15,13 @@ class Board():
     def __init__(self):
         # Will keep archive of all moves
         self.moves = []
+        self.token_separator = '   '
         # initiates blank board
         self.board = [
                 ['-', '-', '-'],
                 ['-', '-', '-'],
                 ['-', '-', '-']
                 ]
-        self.token_separator = '   '
 
     def display(self):
         # Prints out contents of board row by row
@@ -29,7 +29,6 @@ class Board():
             # Each row is a list; join the strings with the token seperator
             print(self.token_separator.join(row))
 
-              
         
 
     def add_move(self, move):
@@ -46,12 +45,63 @@ class Game():
         self.started_at = 'start'
         self.finished_at = 'end'
 
-# Create two players
-harry = Player('Harry', 'X')
-ron = Player('Ron', 'O')
 
-# Create game board
-the_board = Board()
+
+def main():
+    # Intro
+
+    player1 = input(f'Player 1, please enter your name: ')
+    player2 = input(f'Player 2, please enter your name: ')
+
+    game = Game(Board(), Player(player1, 'X'), Player(player2, 'O'))
+
+    print(f'Excellent, lets begin, {game.player1.name} and {game.player2.name}!')
+    print("We'll take turns choosing moves.")
+    print("When it's your turn, enter your move as a coordinate pair.")
+    print('')
+    print('Ex: "1, 2" puts a mark on the first row and second column, like so:')
+    game.board.add_move(Move(game.player1,[0, 1]))
+    game.board.display()
+    print('')
+    print("Let's start with a new board:")
+    game.board = Board()
+
+    current_player = game.player2
+
+    while True:
+        current_player = (game.player1 
+                            if current_player == game.player2 
+                            else game.player2)
+        coord_of_move = input(f"What's your move, {current_player.name}? ")
+        coord_of_move = coord_of_move.split(',')
+        position = [int(num)-1 for num in coord_of_move]
+        move = Move(current_player, position)
+        game.board.add_move(move)
+        game.board.display()
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+if __name__ == '__main__':
+    main()
+
+
+# # Create two players
+# harry = Player('Harry', 'X')
+# ron = Player('Ron', 'O')
+
+# # Create game board
+# the_board = Board()
 
 # the_game = Game(the_board, harry1, ron)
 
